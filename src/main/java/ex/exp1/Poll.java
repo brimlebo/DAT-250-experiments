@@ -1,20 +1,30 @@
 package ex.exp1;
 
+import com.fasterxml.jackson.annotation.*;
+
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "pollID")
 public class Poll {
+    private Integer pollID;
     private String question;
     private Instant publishedAt;
     private Instant validUntil;
+
+    @JsonProperty("creator")
     private User creator;
+
+    @JsonManagedReference
     private List<VoteOption> voteOptions = new ArrayList<>();
 
     public Poll() {
     }
 
-    public Poll(String question, Instant publishedAt, Instant validUntil, User user, List<VoteOption> voteOptions) {
+    public Poll(Integer id, String question, Instant publishedAt, Instant validUntil, User user, List<VoteOption> voteOptions) {
+        this.pollID = id;
         this.question = question;
         this.publishedAt = publishedAt;
         this.validUntil = validUntil;
@@ -42,6 +52,10 @@ public class Poll {
         this.creator = user;
     }
 
+    public Integer getPollID() {
+        return pollID;
+    }
+
     public String getQuestion() {
         return question;
     }
@@ -60,5 +74,21 @@ public class Poll {
 
     public List<VoteOption> getVoteOptions() {
         return voteOptions;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Poll poll = (Poll) o;
+        return Objects.equals(pollID, poll.getPollID()) &&
+                Objects.equals(question, poll.question) &&
+                Objects.equals(validUntil, poll.validUntil) &&
+                Objects.equals(creator, poll.creator);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pollID, question, validUntil, creator);
     }
 }
