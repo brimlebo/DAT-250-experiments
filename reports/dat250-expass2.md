@@ -26,5 +26,10 @@ My issues mainly have stemmed from attempting to implement a somewhat strict rep
 >- **Issue**: In testing I would find that after adding a poll to be stored it would not be at the url it should have been at, f.ex. "/polls/{question}/votes" if making or getting a vote, resulting in no response or en error-code that should not have occurred. The problem lay in me using the question of a poll as an identifier as it seemed that the encoding of the question would make the URL different from what was expected.
 >- **Solution(s)**: In order to remedy this issue I decided to implement an ID for polls (a simple Integer for now) as it would avoid some of the encoding issues of a larger String while also being simpler to use for URL's and easier to match on, the same has been done for User.
 
+## Possible changes to make:
 
+### Refactoring Poll, Vote and VoteOption:
+>- A possible change I want to make is removing VoteOption altogether and instead only have a list of String (private List<String> voteOptions = new ArrayList<>();) that can perform the same function as a VoteOption without the extra class.
+>- In addition, I may want to move the storing of Votes from PollManager into individual Polls, though I'm somewhat unsure on this front if it is a better solution than what I have now.
 
+### Maybe change the project from Java to Kotlin
