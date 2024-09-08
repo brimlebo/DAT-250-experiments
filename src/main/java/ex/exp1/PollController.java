@@ -99,7 +99,7 @@ public class PollController {
         Optional<Poll> poll = pollManager.getPoll(pollID);
 
         if (poll.isEmpty()) {
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 
         return ResponseEntity.ok(pollManager.listVotes(pollID));

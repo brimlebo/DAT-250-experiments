@@ -1,17 +1,12 @@
 package ex.exp1;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 
@@ -96,7 +91,7 @@ public class PollControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string("Vote has been updated"));
 
-        // List votes
+        // List votes, should return the changed vote (Blue not Red)
         mockMvc.perform(get("/pollApi/polls/0/votes"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].selectedOption.caption").value("Blue"));
@@ -106,9 +101,8 @@ public class PollControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string("Poll deleted"));
 
-        // List votes again (should be empty)
+        // List votes again, should return an 404 as the poll no longer exists
         mockMvc.perform(get("/pollApi/polls/0/votes"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$").isEmpty());
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 }
