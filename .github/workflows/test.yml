@@ -35,6 +35,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
+      # Give execute permission to Gradle wrapper script
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
       # Build and run tests using Gradle
       - name: Build with Gradle
         run: ./gradlew clean build
