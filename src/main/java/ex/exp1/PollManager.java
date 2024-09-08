@@ -7,16 +7,16 @@ import java.util.*;
 
 @Component
 public class PollManager {
-    private final Map<String, User> users = new HashMap<>();
+    private final Map<Integer, User> users = new HashMap<>();
     private final Map<Integer, Poll> polls = new HashMap<>();
     private final Map<Integer, Map<User, Vote>> pollVotes = new HashMap<>();
 
     public void addUser(User user) {
-        users.putIfAbsent(user.getUsername(), user);
+        users.putIfAbsent(user.getUserID(), user);
     }
 
-    public Optional<User> getUser(String username) {
-        return Optional.ofNullable(users.get(username));
+    public Optional<User> getUser(Integer UserID) {
+        return Optional.ofNullable(users.get(UserID));
     }
 
     public List<User> allUsers() {
@@ -57,8 +57,8 @@ public class PollManager {
         return pollID + "-" + user.getUsername() + "-" + UUID.randomUUID().toString();
     }
 
-    public Optional<Vote> getVote(Integer pollID, String username) {
-        Optional<User> user = getUser(username);
+    public Optional<Vote> getVote(Integer pollID, Integer UserID) {
+        Optional<User> user = getUser(UserID);
         return user.map(value -> pollVotes.get(pollID).get(value));
     }
 

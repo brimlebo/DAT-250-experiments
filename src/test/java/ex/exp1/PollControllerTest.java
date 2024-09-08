@@ -54,14 +54,14 @@ public class PollControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].username").value("user2"));
 
         // Create a poll
-        Poll poll = new Poll(0, "Best color?", Instant.now(), Instant.now().plusSeconds(3600), new User("user1", "user1@example.com"), List.of(
+        Poll poll = new Poll(0, "Best color?", Instant.now(), Instant.now().plusSeconds(3600), new User(0, "user1", "user1@example.com"), List.of(
                 new VoteOption("Red", 1, null),
                 new VoteOption("Blue", 2, null)
         ));
 
         mockMvc.perform(post("/pollApi/polls")
                         .param("question", "Best color?")
-                        .param("username", "user1")
+                        .param("userID", "0")
                         .param("validUntil", poll.getValidUntil().toString())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(poll.getVoteOptions())))
@@ -76,7 +76,7 @@ public class PollControllerTest {
         // User 2 votes on the poll
         VoteOption voteOption = new VoteOption("Red", 1, null);
         mockMvc.perform(post("/pollApi/polls/0/votes")
-                        .param("username", "user2")
+                        .param("userID", "1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(voteOption)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -85,7 +85,7 @@ public class PollControllerTest {
         // User 2 changes their vote
         VoteOption newVoteOption = new VoteOption("Blue", 2, null);
         mockMvc.perform(post("/pollApi/polls/0/votes")
-                        .param("username", "user2")
+                        .param("userID", "1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(newVoteOption)))
                 .andExpect(MockMvcResultMatchers.status().isOk())

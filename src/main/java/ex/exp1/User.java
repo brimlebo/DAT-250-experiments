@@ -3,12 +3,14 @@ package ex.exp1;
 import java.util.Objects;
 
 public class User {
+    private Integer userID;
     private String username;
     private String email;
 
     public User() {}
 
-    public User(String username, String email) {
+    public User(Integer id, String username, String email) {
+        this.userID = id;
         this.username = username;
         this.email = email;
     }
@@ -19,6 +21,10 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Integer getUserID() {
+        return userID;
     }
 
     public String getUsername() {

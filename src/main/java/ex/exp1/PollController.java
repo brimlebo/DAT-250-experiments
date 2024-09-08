@@ -20,7 +20,8 @@ public class PollController {
 
     @PostMapping("/users")
     public ResponseEntity<String> createUser(@RequestParam String username, @RequestParam String email) {
-        User user = new User(username, email);
+        Integer userID = pollManager.allUsers().size();
+        User user = new User(userID, username, email);
         pollManager.addUser(user);
         return ResponseEntity.ok("User created");
     }
@@ -30,17 +31,17 @@ public class PollController {
         return ResponseEntity.ok(pollManager.allUsers());
     }
 
-    @GetMapping("/users/{username}")
-    public ResponseEntity<User> getUser(@PathVariable String username) {
-        Optional<User> user = pollManager.getUser(username);
+    @GetMapping("/users/{userID}")
+    public ResponseEntity<User> getUser(@PathVariable Integer userID) {
+        Optional<User> user = pollManager.getUser(userID);
 
         return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     // Add pole
     @PostMapping("/polls")
-    public ResponseEntity<String> addPoll(@RequestParam String question, @RequestParam String username, @RequestParam Instant validUntil, @RequestBody List<VoteOption> voteOptions) {
-        Optional<User> user = pollManager.getUser(username);
+    public ResponseEntity<String> addPoll(@RequestParam String question, @RequestParam Integer userID, @RequestParam Instant validUntil, @RequestBody List<VoteOption> voteOptions) {
+        Optional<User> user = pollManager.getUser(userID);
         if (user.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
@@ -79,8 +80,8 @@ public class PollController {
     }
 
     @PostMapping("/polls/{pollID}/votes")
-    public ResponseEntity<String> vote(@PathVariable Integer pollID, @RequestBody VoteOption voteOption, @RequestParam String username) {
-        Optional<User> user = pollManager.getUser(username);
+    public ResponseEntity<String> vote(@PathVariable Integer pollID, @RequestBody VoteOption voteOption, @RequestParam Integer userID) {
+        Optional<User> user = pollManager.getUser(userID);
         Optional<Poll> poll = pollManager.getPoll(pollID);
 
         if (user.isEmpty()) {
@@ -105,16 +106,16 @@ public class PollController {
         return ResponseEntity.ok(pollManager.listVotes(pollID));
     }
 
-    @GetMapping("/polls/{pollID}/votes/{username}")
-    public ResponseEntity<Vote> getVote(@PathVariable Integer pollID, @PathVariable String username) {
-        Optional<Vote> vote = pollManager.getVote(pollID, username);
+    @GetMapping("/polls/{pollID}/votes/{userID}")
+    public ResponseEntity<Vote> getVote(@PathVariable Integer pollID, @PathVariable Integer userID) {
+        Optional<Vote> vote = pollManager.getVote(pollID, userID);
 
         return vote.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/polls/{pollID}/votes")
-    public ResponseEntity<String> deleteVote(@PathVariable Integer pollID, @RequestParam String username) {
-        Optional<User> user = pollManager.getUser(username);
+    public ResponseEntity<String> deleteVote(@PathVariable Integer pollID, @RequestParam Integer userID) {
+        Optional<User> user = pollManager.getUser(userID);
         Optional<Poll> poll = pollManager.getPoll(pollID);
 
         if (user.isEmpty()) {
