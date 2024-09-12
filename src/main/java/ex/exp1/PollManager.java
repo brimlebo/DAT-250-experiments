@@ -36,7 +36,7 @@ public class PollManager {
         return new ArrayList<>(polls.values());
     }
 
-    public String addOrUpdateUserVote(User user, Integer pollID, VoteOption voteOption) {
+    public String addOrUpdateUserVote(User user, Integer pollID, String voteOption) {
         Map<User, Vote> votes = pollVotes.getOrDefault(pollID, new HashMap<>());
         Vote vote = votes.get(user);
         if (vote != null) {

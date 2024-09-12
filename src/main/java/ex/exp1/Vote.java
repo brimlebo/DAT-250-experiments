@@ -12,7 +12,7 @@ public class Vote {
     private Instant publishedAt;
 
     @JsonManagedReference
-    private VoteOption selectedOption;
+    private String selectedOption;
 
     @JsonIdentityReference(alwaysAsId = true)
     private User user; // User who voted, for ease of tracking
@@ -20,7 +20,7 @@ public class Vote {
     public Vote() {
     }
 
-    public Vote(String id, Instant publishedAt, VoteOption selectedOption, User user) {
+    public Vote(String id, Instant publishedAt, String selectedOption, User user) {
         this.voteID = id;
         this.publishedAt = publishedAt;
         this.selectedOption = selectedOption;
@@ -35,7 +35,7 @@ public class Vote {
         this.publishedAt = publishedAt;
     }
 
-    public void setSelectedOption(VoteOption selectedOption) {
+    public void setSelectedOption(String selectedOption) {
         this.selectedOption = selectedOption;
     }
 
@@ -51,7 +51,7 @@ public class Vote {
         return publishedAt;
     }
 
-    public VoteOption getSelectedOption() {
+    public String getSelectedOption() {
         return selectedOption;
     }
 

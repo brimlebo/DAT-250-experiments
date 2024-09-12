@@ -55,8 +55,8 @@ public class PollControllerTest {
 
         // Create a poll
         Poll poll = new Poll(0, "Best color?", Instant.now(), Instant.now().plusSeconds(3600), new User(0, "user1", "user1@example.com"), List.of(
-                new VoteOption("Red", 1, null),
-                new VoteOption("Blue", 2, null)
+                "Red",
+                "Blue"
         ));
 
         mockMvc.perform(post("/pollApi/polls")
@@ -74,27 +74,27 @@ public class PollControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].question").value("Best color?"));
 
         // User 2 votes on the poll
-        VoteOption voteOption = new VoteOption("Red", 1, null);
+        String voteOption = "Red";
         mockMvc.perform(post("/pollApi/polls/0/votes")
                         .param("userID", "1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(voteOption)))
+                        .content(voteOption))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string("Vote has been created"));
 
         // User 2 changes their vote
-        VoteOption newVoteOption = new VoteOption("Blue", 2, null);
+        String newVoteOption = "Blue";
         mockMvc.perform(post("/pollApi/polls/0/votes")
                         .param("userID", "1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(newVoteOption)))
+                        .content(newVoteOption))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string("Vote has been updated"));
 
         // List votes, should return the changed vote (Blue not Red)
         mockMvc.perform(get("/pollApi/polls/0/votes"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].selectedOption.caption").value("Blue"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].selectedOption").value("Blue"));
 
         // Delete the poll
         mockMvc.perform(delete("/pollApi/polls/0"))

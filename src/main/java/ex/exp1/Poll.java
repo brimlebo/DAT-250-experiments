@@ -13,17 +13,15 @@ public class Poll {
     private String question;
     private Instant publishedAt;
     private Instant validUntil;
+    private List<String> voteOptions = new ArrayList<>();
 
     @JsonProperty("creator")
     private User creator;
 
-    @JsonManagedReference
-    private List<VoteOption> voteOptions = new ArrayList<>();
-
     public Poll() {
     }
 
-    public Poll(Integer id, String question, Instant publishedAt, Instant validUntil, User user, List<VoteOption> voteOptions) {
+    public Poll(Integer id, String question, Instant publishedAt, Instant validUntil, User user, List<String> voteOptions) {
         this.pollID = id;
         this.question = question;
         this.publishedAt = publishedAt;
@@ -44,7 +42,7 @@ public class Poll {
         this.validUntil = validUntil;
     }
 
-    public void setVoteOptions(List<VoteOption> voteOptions) {
+    public void setVoteOptions(List<String> voteOptions) {
         this.voteOptions = voteOptions;
     }
 
@@ -72,7 +70,7 @@ public class Poll {
         return creator;
     }
 
-    public List<VoteOption> getVoteOptions() {
+    public List<String> getVoteOptions() {
         return voteOptions;
     }
 

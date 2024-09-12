@@ -40,7 +40,7 @@ public class PollController {
 
     // Add pole
     @PostMapping("/polls")
-    public ResponseEntity<String> addPoll(@RequestParam String question, @RequestParam Integer userID, @RequestParam Instant validUntil, @RequestBody List<VoteOption> voteOptions) {
+    public ResponseEntity<String> addPoll(@RequestParam String question, @RequestParam Integer userID, @RequestParam Instant validUntil, @RequestBody List<String> voteOptions) {
         Optional<User> user = pollManager.getUser(userID);
         if (user.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
@@ -80,7 +80,7 @@ public class PollController {
     }
 
     @PostMapping("/polls/{pollID}/votes")
-    public ResponseEntity<String> vote(@PathVariable Integer pollID, @RequestBody VoteOption voteOption, @RequestParam Integer userID) {
+    public ResponseEntity<String> vote(@PathVariable Integer pollID, @RequestBody String voteOption, @RequestParam Integer userID) {
         Optional<User> user = pollManager.getUser(userID);
         Optional<Poll> poll = pollManager.getPoll(pollID);
 
