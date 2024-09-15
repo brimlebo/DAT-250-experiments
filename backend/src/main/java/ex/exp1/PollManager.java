@@ -11,6 +11,7 @@ public class PollManager {
     private final Map<Integer, Poll> polls = new HashMap<>();
     private final Map<Integer, Map<User, Vote>> pollVotes = new HashMap<>();
 
+
     public void addUser(User user) {
         users.putIfAbsent(user.getUserID(), user);
     }

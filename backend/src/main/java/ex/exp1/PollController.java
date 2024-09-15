@@ -1,29 +1,38 @@
 package ex.exp1;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/pollApi/")
 public class PollController {
 
     @Autowired
     private PollManager pollManager;
 
+    // Some test data for the front-end
+    @PostConstruct
+    public void createInitialState() {
+        createUser("a", "a@test.com");
+        createUser("b", "b@test.com");
+        addPoll(new PollCreationRequest("Best food?", 0, Instant.now().plusSeconds(3600), List.of("Pizza", "Crayons")));
+    }
+
+    // Currently no checks on if a username or mail already exists so there can be multiple with the same
     @PostMapping("/users")
-    public ResponseEntity<String> createUser(@RequestParam String username, @RequestParam String email) {
+    public ResponseEntity<User> createUser(@RequestParam String username, @RequestParam String email) {
         Integer userID = pollManager.allUsers().size();
         User user = new User(userID, username, email);
         pollManager.addUser(user);
-        return ResponseEntity.ok("User created");
+        return ResponseEntity.ok(user);
     }
 
     @GetMapping("/users")
@@ -40,18 +49,17 @@ public class PollController {
 
     // Add pole
     @PostMapping("/polls")
-    public ResponseEntity<String> addPoll(@RequestParam String question, @RequestParam Integer userID, @RequestParam Instant validUntil, @RequestBody List<String> voteOptions) {
-        Optional<User> user = pollManager.getUser(userID);
+    public ResponseEntity<Poll> addPoll(@RequestBody PollCreationRequest request) {
+        Optional<User> user = pollManager.getUser(request.userID());
         if (user.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 
         Integer pollID = pollManager.allPolls().size();
         Instant publishedAt = Instant.now();
-        String decodedQuestion = URLDecoder.decode(question, StandardCharsets.UTF_8);
-        Poll poll = new Poll(pollID, decodedQuestion, publishedAt, validUntil, user.get(), voteOptions);
+        Poll poll = new Poll(pollID, request.question(), publishedAt, request.validUntil(), user.get(), request.voteOptions());
         pollManager.addPoll(poll);
-        return ResponseEntity.ok("Poll created");
+        return ResponseEntity.ok(poll);
     }
 
     // Find all poles
