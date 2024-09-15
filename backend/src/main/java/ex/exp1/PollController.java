@@ -7,7 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -112,6 +114,27 @@ public class PollController {
         }
 
         return ResponseEntity.ok(pollManager.listVotes(pollID));
+    }
+
+    // Returns vote count for each option in a poll
+    @GetMapping("/polls/{pollID}/voteCounts")
+    public ResponseEntity<Map<String, Integer>> getVoteCounts(@PathVariable Integer pollID) {
+        Optional<Poll> poll = pollManager.getPoll(pollID);
+
+        if (poll.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+        Map<String, Integer> voteCounts = new HashMap<>();
+        List<Vote> votes = pollManager.listVotes(pollID);
+
+        // Count votes for each option
+        for (Vote vote : votes) {
+            String option = vote.getSelectedOption();
+            voteCounts.put(option, voteCounts.getOrDefault(option, 0) + 1);
+        }
+
+        return ResponseEntity.ok(voteCounts);
     }
 
     @GetMapping("/polls/{pollID}/votes/{userID}")

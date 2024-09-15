@@ -1,7 +1,7 @@
 <script lang="ts">
     import CreatePoll from '$lib/components/CreatePoll.svelte';
     import VoteOnPoll from '$lib/components/VoteOnPoll.svelte';
-    import CreateUserComponent from '$lib/components/CreateUser.svelte';
+    import CreateUser from '$lib/components/CreateUser.svelte';
 
     import { page } from '$app/stores';
     import { onMount } from 'svelte';
@@ -18,6 +18,10 @@
     }> = [];
 
     let errorMessage: string = '';
+
+    const logout = () => {
+        currentUser.set({ userID: -1, username: '', email: '' }); // Reset the user
+    };
 
     // Fetch the list of polls
     const fetchPolls = async () => {
@@ -62,11 +66,12 @@
 
         <!-- Create User Section -->
         <section id="create-user">
-            <h2>Create User</h2>
-            <CreateUserComponent />
+            <CreateUser />
         </section>
     {:else}
         <h1>Welcome to the Polling App, {$currentUser.username}</h1>
+
+        <button on:click={logout}>Log Out</button>
 
          <!-- Create Poll Section -->
         <section id="create-poll">
@@ -106,18 +111,6 @@
 <style>
     main {
         padding: 2rem;
-    }
-
-    nav ul {
-        list-style: none;
-        display: flex;
-        gap: 2rem;
-        padding: 0;
-    }
-
-    nav a {
-        text-decoration: none;
-        color: blue;
     }
 
     section {

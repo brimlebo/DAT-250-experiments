@@ -24,14 +24,17 @@ Not that many issues this time, mostly just took some time to learn/remember sve
 
 ## Possible changes to make:
 
+### Vote counts are currently not finished
+>- Currently only showing 0 as all the options result in undefined.
+
 ### Backend checks:
 >- Currently, the backend is at most only doing the bare minimum in checks on creation of users, polls or the casting of votes and if something with the same username/question already exists. This should be changed to be more strict.
 
 ### Showing votes on options:
 >- Showing how many votes each option in a poll has on the page when you are making a vote, or after you have cast the vote.
 
-### Expand authentication/user-creation:
->- The user system on the page is currently very barebones, you make a user when you open the page and then use it to make a poll or cast a vote. Could be expanded to have a log-in and password for each user.
+### Expand authentication:
+>- The user system on the page is currently very barebones. Could be expanded to have a password or other authentication for a user for each user.
 
 ### UI/Layout:
 >- Also currently very barebones, though that is mostly something I want to leave for the larger project.

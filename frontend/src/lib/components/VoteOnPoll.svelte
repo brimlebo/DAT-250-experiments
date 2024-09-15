@@ -7,6 +7,7 @@
     export let pollID: number;
 
     let poll: any = null;
+    let voteCounts: Record<string, number> = {}; // Initialize with an empty record
     let selectedOption: string = '';
 
     let errorMessage: string = '';
@@ -27,17 +28,34 @@
             const response = await fetch(`http://localhost:8080/pollApi/polls/${pollID}`);
             if (response.ok) {
                 poll = await response.json();
+                await fetchVoteCounts(); // Fetch vote counts after fetching the poll
                 errorMessage = '';
-            }
-            else {
+            } else {
                 errorMessage = 'Poll not found';
             }
-        }
-        catch (error: unknown) {
+        } catch (error: unknown) {
             if (error instanceof Error) {
                 errorMessage = `Failed to fetch poll: ${error.message}`;
             } else {
                 errorMessage = 'An unknown error occurred while fetching the poll.';
+            }
+        }
+    };
+
+    const fetchVoteCounts = async () => {
+        try {
+            const response = await fetch(`http://localhost:8080/pollApi/polls/${pollID}/voteCounts`);
+            if (response.ok) {
+                voteCounts = await response.json();
+                errorMessage = '';
+            } else {
+                errorMessage = 'Failed to fetch vote counts';
+            }
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                errorMessage = `Failed to fetch vote counts: ${error.message}`;
+            } else {
+                errorMessage = 'An unknown error occurred while fetching vote counts.';
             }
         }
     };
@@ -83,12 +101,14 @@
     {#if poll}
         <h2>{poll.question}</h2>
         <form on:submit|preventDefault={submitVote}>
-            <h4>Options:</h4>
+            <h4>Options (Ignore votes, currently bugged):</h4>
             {#each poll.voteOptions as option}
-                <label>
-                    <input type="radio" name="option" value={option} bind:group={selectedOption} />
-                    {option}
-                </label>
+                <div>
+                    <label>
+                        <input type="radio" name="option" value={option} bind:group={selectedOption} />
+                        {option} ({voteCounts[option] || 0} votes)
+                    </label>
+                </div>
             {/each}
 
             <button type="submit">Submit Vote</button>
@@ -105,3 +125,18 @@
         <p>{errorMessage}</p>
     {/if}
 </main>
+
+<style>
+    form {
+        margin-top: 1rem;
+    }
+
+    label {
+        display: block;
+        margin: 0.5rem 0;
+    }
+
+    button {
+        margin-top: 1rem;
+    }
+</style>

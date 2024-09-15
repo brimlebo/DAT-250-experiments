@@ -1,11 +1,30 @@
+// src/lib/stores/userStore.ts
 import { writable } from 'svelte/store';
 
-// Define the type for the user
-export interface User {
-    userID: number;
-    username: string;
-    email: string;
+// Helper function to load the user from localStorage
+function loadUserFromStorage() {
+    if (typeof localStorage !== 'undefined') {
+        const storedUser = localStorage.getItem('currentUser');
+        if (storedUser) {
+            return JSON.parse(storedUser);
+        }
+    }
+    return { userID: -1, username: '', email: '' };
 }
 
-// Create a writable store with a default value
-export const currentUser = writable<User>({ userID: -1, username: "no", email: "u" });
+// Create a writable store for the current user
+const currentUser = writable(loadUserFromStorage());
+
+// Subscribe to changes and persist the user to localStorage
+currentUser.subscribe((user) => {
+    if (typeof localStorage !== 'undefined') {
+        if (user.userID === -1) {
+            localStorage.removeItem('currentUser'); // Clear storage on logout
+        } else {
+            localStorage.setItem('currentUser', JSON.stringify(user)); // Save user to storage
+        }
+    }
+});
+
+// Export the store
+export { currentUser };
