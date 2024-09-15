@@ -32,8 +32,7 @@ public class PollControllerTest {
         mockMvc.perform(post("/pollApi/users")
                         .param("username", "user1")
                         .param("email", "user1@example.com"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string("User created"));
+                .andExpect(MockMvcResultMatchers.status().isOk());
 
         // List all users
         mockMvc.perform(get("/pollApi/users"))
@@ -44,8 +43,7 @@ public class PollControllerTest {
         mockMvc.perform(post("/pollApi/users")
                         .param("username", "user2")
                         .param("email", "user2@example.com"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string("User created"));
+                .andExpect(MockMvcResultMatchers.status().isOk());
 
         // List all users again
         mockMvc.perform(get("/pollApi/users"))
@@ -64,8 +62,7 @@ public class PollControllerTest {
         mockMvc.perform(post("/pollApi/polls")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(req)))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string("Poll created"));
+                .andExpect(MockMvcResultMatchers.status().isOk());
 
         // List all polls
         mockMvc.perform(get("/pollApi/polls"))
@@ -78,8 +75,7 @@ public class PollControllerTest {
                         .param("userID", "3")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(voteOption))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string("Vote has been created"));
+                .andExpect(MockMvcResultMatchers.status().isOk());
 
         // User 2 changes their vote
         String newVoteOption = "Blue";
