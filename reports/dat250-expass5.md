@@ -20,9 +20,9 @@ Only issue I've stumbled upon with this experiment is not being able to easily f
 ### experiment 2:
 
 I made a javascript file to do the mapReduction from the tutorial, the following is the result of using it. <br>
-[mapReduce file](../exp5/mongodbTesting.js)
+[mapReduce file](../exp5/mongodbTesting.js) <br>
 ![img_4.png](../exp5/img_4.png)
 
-I added another map-reduce operation to the same file that aims to count the number of each item that have been sold, you can see the result below.
-![img_5.png](../exp5/img_5.png)
+I added another map-reduce operation to the same file that aims to count the number of each item that have been sold, you can see the result below. <br>
+![img_5.png](../exp5/img_5.png) <br>
 This can be useful in finding what items are the most popular with customers, this can allow the business to make data-driven decisions about how to best manage their inventory of items.
