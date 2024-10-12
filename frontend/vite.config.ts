@@ -9,7 +9,7 @@ export default defineConfig({
 	server: {
 		proxy: {
 			'/pollApi': {
-				target: 'http://localhost:8080',
+				target: process.env.VITE_BACKEND_URL || 'http://localhost:8080',
 				changeOrigin: true,
 				secure: false
 			}
